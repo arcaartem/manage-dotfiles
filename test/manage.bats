@@ -56,6 +56,24 @@ teardown() {
     [ "$(cat "$TEST_DIR/tmp/build/test-package/test")" = "template content with variable: test_value" ]
 }
 
+@test "renders templated and regular packages directly to dotfiles directory" {
+    run ./manage.sh render
+    
+    [ "$status" -eq 0 ]
+    [ -f "$XDG_DATA_HOME/dotfiles/test-package/test.txt" ]
+    [ -f "$XDG_DATA_HOME/dotfiles/test-package/test" ]
+    [ "$(cat "$XDG_DATA_HOME/dotfiles/test-package/test")" = "template content with variable: test_value" ]
+}
+
+@test "renders only specified package to dotfiles directory" {
+    run ./manage.sh render test-package
+    
+    [ "$status" -eq 0 ]
+    [ -f "$XDG_DATA_HOME/dotfiles/test-package/test.txt" ]
+    [ -f "$XDG_DATA_HOME/dotfiles/test-package/test" ]
+    [ ! -f "$XDG_DATA_HOME/dotfiles/another-package/another.txt" ]
+}
+
 @test "stows common package to home directory" {
     # First build and stow
     ./manage.sh stow --apply

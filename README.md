@@ -35,6 +35,9 @@ sudo apt-get install stow bats
 # Build packages (render templates) to ./tmp/build
 ./manage.sh build
 
+# Render packages directly to dotfiles directory
+./manage.sh render
+
 # Preview changes (dry-run)
 ./manage.sh stow
 

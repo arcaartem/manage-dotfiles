@@ -186,7 +186,8 @@ usage() {
 Usage: $0 COMMAND [OPTIONS] [PACKAGES...]
 
 Commands:
-    build              Render templates to ./tmp/build directory
+    build             Render templates to ./tmp/build directory
+    render            Render templates directly to dotfiles directory
     stow              Apply changes using stow (dry-run by default)
     unstow            Remove stow symlinks (dry-run by default)
     restow            Remove and reapply stow symlinks (dry-run by default)
@@ -270,6 +271,20 @@ case "$COMMAND" in
             done
         fi
         log_success "Build completed. Files were rendered to: $TARGET_DIR"
+        ;;
+    render)
+        # For render command, use DOTFILES_DIR
+        TARGET_DIR="$DOTFILES_DIR"
+        mkdir -p "$TARGET_DIR"
+        if [ -z "$PACKAGES" ]; then
+            process_all_packages
+        else
+            # Process each package
+            for package in $PACKAGES; do
+                process_package_name "$package"
+            done
+        fi
+        log_success "Render completed. Files were rendered to: $TARGET_DIR"
         ;;
     stow)
         log_info "Preparing files for stow..."
